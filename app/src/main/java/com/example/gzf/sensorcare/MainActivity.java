@@ -1,59 +1,69 @@
 package com.example.gzf.sensorcare;
 
-import android.os.AsyncTask;
-import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
-import android.util.Log;
-import android.view.LayoutInflater;
-import android.view.ViewGroup;
-import android.widget.ImageView;
-import android.widget.TextView;
+import android.support.v4.app.Fragment;
 import android.widget.Toast;
 
-import com.alibaba.fastjson.JSON;
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
-
-import okhttp3.OkHttpClient;
-import okhttp3.Request;
-import okhttp3.Response;
 
 
-public class MainActivity extends AppCompatActivity {
-    private RecyclerView mRecyclerView;
-    private List<Person> mPersonList = new ArrayList<>();
-    private PersonAdapter personAdapter;
 
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
-        mRecyclerView=(RecyclerView)findViewById(R.id.recyler_view);
-        mRecyclerView.setLayoutManager(new LinearLayoutManager(MainActivity.this));
+public class MainActivity extends SingleFragmentActivity {
+//    private RecyclerView mRecyclerView;
+//    private List<Person> mPersonList = new ArrayList<>();
+//    private PersonAdapter personAdapter;
+//
+//    Context mContext = MainActivity.this;
+//    NotificationManager mNotificationManager;
+//    Notification mNotification;
+//    Notification.Builder builder;
+//    Intent mIntent;
+//    PendingIntent pi;
+//
+//    // Alert
+//    private Vibrator vibrator;
+//    private SoundPool soundPool;
+//    int hit;
 
-        if(savedInstanceState != null){
-            mPersonList = savedInstanceState.getParcelableArrayList("PersonList");
-        }
-//        else {
-//            mPersonList.add(new Person("姜人和","12:34:56:78:12:34",0,"422-3"));
+//    @Override
+//    protected void onCreate(Bundle savedInstanceState) {
+//        super.onCreate(savedInstanceState);
+//        setContentView(R.layout.list_fragment);
+//        mRecyclerView=(RecyclerView)findViewById(R.id.recyler_view);
+//        mRecyclerView.setLayoutManager(new LinearLayoutManager(MainActivity.this));
+//
+//        mNotificationManager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
+//        mIntent = new Intent(this, MainActivity.class);
+//        pi = PendingIntent.getActivity(this,0,mIntent,0);
+//        builder = new Notification.Builder(this);
+//
+//        if(savedInstanceState != null){
+//            mPersonList = savedInstanceState.getParcelableArrayList("PersonList");
 //        }
-        new FetchPersonState().execute();
-    }
+////        else {
+////            mPersonList.add(new Person("姜人和","12:34:56:78:12:34",0,"422-3"));
+////        }
+//        new FetchPersonState().execute();
+//
+//        vibrator = (Vibrator) getSystemService(VIBRATOR_SERVICE);
+//        soundPool = new SoundPool(2, AudioManager.STREAM_MUSIC, 100);
+//        hit = soundPool.load(this, R.raw.my_alert, 0);
+//    }
+
+//    @Override
+//    protected void onResume() {
+//        super.onResume();
+//        personAdapter = new PersonAdapter(mPersonList);
+//        setupAdapter();
+//    }
+//
+//    @Override
+//    protected void onSaveInstanceState(Bundle outState){
+//        super.onSaveInstanceState(outState);
+//        outState.putParcelableArrayList("PersonList", (ArrayList<Person>)mPersonList);
+//    }
 
     @Override
-    protected void onResume() {
-        super.onResume();
-        personAdapter = new PersonAdapter(mPersonList);
-        setupAdapter();
-    }
-
-    @Override
-    protected void onSaveInstanceState(Bundle outState){
-        super.onSaveInstanceState(outState);
-        outState.putParcelableArrayList("PersonList", (ArrayList<Person>)mPersonList);
+    protected Fragment createFragment() {
+        return new UserListFragment();
     }
 
     long startTime = 0;
@@ -70,110 +80,66 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    private void setupAdapter(){
-        mRecyclerView.setAdapter(personAdapter);
-    }
 
-    public class PersonHolder extends RecyclerView.ViewHolder{
-        private TextView mNameTextView;
-        private TextView mLocationTextView;
-        private TextView mStateTextView;
-        private ImageView mImageView;
-        private Person mPerson;
-        public PersonHolder(LayoutInflater inflater, ViewGroup parent){
-            super(inflater.inflate(R.layout.list_item,parent,false));
-            mNameTextView=(TextView)itemView.findViewById(R.id.person_name);
-            mLocationTextView=(TextView)itemView.findViewById(R.id.person_location);
-            mStateTextView=(TextView)itemView.findViewById(R.id.person_state);
-            mImageView=(ImageView) itemView.findViewById(R.id.list_image);
-        }
+//    private static final int NOTIFICATION_FLAG = 1;
 
-        public void bind(Person person){
-            mPerson=person;
-            mNameTextView.setText(mPerson.getName());
-            mStateTextView.setText(mPerson.getState());
-            mLocationTextView.setText(mPerson.getLocation());
-            if(mPerson.getRawState()==0){
-//                itemView.setBackgroundColor(0xFFFF9900);
-                mImageView.setImageResource(R.drawable.safety);
-            }else if(mPerson.getRawState()==4){
-//                itemView.setBackgroundColor(0xFFFF9900);
-                mImageView.setImageResource(R.drawable.warning);
-            }
-            else{
-                mImageView.setImageResource(R.drawable.danger);
-            }
-        }
-    }
+//    public void testNotificationMethod(View view){
+//        soundPool.play(hit, 5, 5, 0, 0, (float)1);
+//        vibrator.vibrate(new long[]{100,1000,500,1000,500,2000,500,2000},-1);
 
-    public class PersonAdapter extends RecyclerView.Adapter<PersonHolder>{
-        private List<Person> mList;
-        public PersonAdapter(List<Person> s){
-            mList=s;
-        }
-
-
-        @Override
-        public PersonHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-            LayoutInflater layoutInflater=LayoutInflater.from(MainActivity.this);
-            return new PersonHolder(layoutInflater,parent);
-        }
-
-        @Override
-        public void onBindViewHolder(PersonHolder holder, int position) {
-            Person person=mList.get(position);
-//            Log.i("index",person.toString());
-
-            holder.bind(person);
-        }
-
-        @Override
-        public int getItemCount() {
-            return mList.size();
-        }
-    }
-
-
-
-    class FetchPersonState extends AsyncTask<Void,List<Person>,Void> {
-        String URL="http://192.168.0.3:8000/android/";
-
-        public String fetchData() throws IOException{
-            OkHttpClient client=new OkHttpClient();
-            Request request=new Request.Builder().url(URL).build();
-            try(Response response=client.newCall(request).execute()){
-                return response.body().string();
-            }
-        }
-
-
-        @Override
-        protected void onProgressUpdate(List<Person>... values) {
-            super.onProgressUpdate(values);
-//            setupAdapter(mPersonList);
-
-            mRecyclerView.setAdapter(new PersonAdapter(values[0]));
-        }
-
-        @Override
-        protected Void doInBackground(Void... params) {
-            while (true){
-                try{
-                    //Log.i("test",fetchData());
-                    String json=fetchData();
-                    mPersonList= JSON.parseArray(json,Person.class);
-                    Log.i("test",mPersonList.get(0).toString());
-                    publishProgress(mPersonList);
-                }
-                catch (Exception e){
-                    Log.d("error",e.toString());
-                }
-                try {
-                    // Simulate network access.
-                    Thread.sleep(2000);
-                } catch (InterruptedException e) {}
-            }
-        }
-    }
+//        // 在Android进行通知处理，首先需要重系统哪里获得通知管理器NotificationManager，它是一个系统Service。
+//        NotificationManager manager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+//        switch (view.getId()) {
+//            // 默认通知 API16及之后可用
+//            case R.id.btn1:
+//                PendingIntent pendingIntent3 = PendingIntent.getActivity(this, 0,
+//                        new Intent(Intent.ACTION_VIEW), 0);
+//                // 通过Notification.Builder来创建通知，注意API Level
+//                Intent hangIntent = new Intent();
+//                hangIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK).setClass(this,MainActivity.class);
+//                PendingIntent hangPendingIntent = PendingIntent.getActivity(this, 0, hangIntent,PendingIntent.FLAG_CANCEL_CURRENT);
+//                // API16之后才支持
+//                Notification notify3 = new Notification.Builder(this)
+//                        .setSmallIcon(R.drawable.danger)
+//                        .setTicker("TickerText:" + "您有新短消息，请注意查收！")
+//                        .setContentTitle("Notification Title")
+//                        .setContentText("This is the notification message")
+//                        .setContentIntent(pendingIntent3)
+//                        .setFullScreenIntent(hangPendingIntent,true)
+//                        .setNumber(1).build(); // 需要注意build()是在API
+//                // level16及之后增加的，API11可以使用getNotificatin()来替代
+//                notify3.flags |= Notification.FLAG_AUTO_CANCEL; // FLAG_AUTO_CANCEL表明当通知被用户点击时，通知将被清除。
+//                manager.notify(NOTIFICATION_FLAG, notify3);// 步骤4：通过通知管理器来发起通知。如果id不同，则每click，在status哪里增加一个提示
+//                Log.i("testNotification",notify3.tickerText.toString());
+//                break;
+//            // 自定义通知
+//            case R.id.btn4:
+//                // Notification myNotify = new Notification(R.drawable.message,
+//                // "自定义通知：您有新短信息了，请注意查收！", System.currentTimeMillis());
+//                Notification myNotify = new Notification();
+//                myNotify.icon = R.drawable.message;
+//                myNotify.tickerText = "TickerText:您有新短消息，请注意查收！";
+//                myNotify.when = System.currentTimeMillis();
+//                myNotify.flags = Notification.FLAG_NO_CLEAR;// 不能够自动清除
+//                RemoteViews rv = new RemoteViews(getPackageName(),
+//                        R.layout.my_notification);
+//                rv.setTextViewText(R.id.text_content, "hello wrold!");
+//                myNotify.contentView = rv;
+//                Intent intent = new Intent(Intent.ACTION_MAIN);
+//                PendingIntent contentIntent = PendingIntent.getActivity(this, 1,
+//                        intent, 1);
+//                myNotify.contentIntent = contentIntent;
+//                manager.notify(NOTIFICATION_FLAG, myNotify);
+//                break;
+//            case R.id.btn5:
+//                // 清除id为NOTIFICATION_FLAG的通知
+//                manager.cancel(NOTIFICATION_FLAG);
+//                // 清除所有的通知
+//                // manager.cancelAll();
+//                break;
+//            default:
+//                break;
+//        }
+//    }
 }
 
