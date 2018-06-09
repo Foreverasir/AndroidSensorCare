@@ -1,40 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!--<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"-->
-              <!--android:orientation="vertical"-->
-              <!--android:layout_width="match_parent"-->
-              <!--android:layout_height="wrap_content"-->
-              <!--android:background="#FF4081"-->
-              <!--android:layout_margin="5dp">-->
-    <!--<TextView-->
-        <!--android:layout_width="match_parent"-->
-        <!--android:layout_height="wrap_content"-->
-        <!--android:id="@+id/person_name"-->
-        <!--android:text="name"-->
-        <!--android:padding="5dp"-->
-        <!--android:textColor="#ffffff"/>-->
-    <!--<TextView-->
-        <!--android:layout_width="match_parent"-->
-        <!--android:layout_height="wrap_content"-->
-        <!--android:id="@+id/person_location"-->
-        <!--android:text="room"-->
-        <!--android:padding="5dp"-->
-        <!--android:textColor="#ffffff"/>-->
-    <!--<TextView-->
-        <!--android:layout_width="match_parent"-->
-        <!--android:layout_height="wrap_content"-->
-        <!--android:id="@+id/person_state"-->
-        <!--android:text="state"-->
-        <!--android:padding="5dp"-->
-        <!--android:textColor="#ffffff"/>-->
-<!--</LinearLayout>-->
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-                android:layout_width="fill_parent"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
                 android:background="@drawable/list_selector"
                 android:orientation="horizontal"
-                android:padding="5dip"
-                android:layout_margin="5dp">
-
+                android:padding="8dp">
     <!--  ListView最左边的缩略图 -->
     <LinearLayout android:id="@+id/thumbnail"
                   android:layout_width="wrap_content"
@@ -48,7 +19,8 @@
             android:id="@+id/list_image"
             android:layout_width="50dip"
             android:layout_height="50dip"
-            android:src="@drawable/safety"/>
+            android:src="@drawable/safety"
+            tools:baselineAlignBottom="false" />
 
     </LinearLayout>
 
@@ -94,7 +66,5 @@
         android:textSize="15dip"
         android:textColor="#1296db"
         android:textStyle="bold"/>
-
-
 
 </RelativeLayout>

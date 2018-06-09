@@ -1,3 +1,7 @@
 <resources>
     <string name="app_name">SensorCare</string>
+    <string name="title_hint">Enter a title for the crime.</string>
+    <string name="title_label">Title</string>
+    <string name="details_label">Details</string>
+    <string name="solved_label">Solved</string>
 </resources>

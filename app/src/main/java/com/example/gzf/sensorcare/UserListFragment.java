@@ -13,6 +13,7 @@ import android.os.Vibrator;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -59,14 +60,12 @@ public class UserListFragment extends Fragment {
         View v = inflater.inflate(R.layout.list_fragment, container, false);
         mRecyclerView = (RecyclerView) v.findViewById(R.id.recycler_view);
         mRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
+        mRecyclerView.addItemDecoration(new DividerItemDecoration(getContext(),DividerItemDecoration.VERTICAL));
         //updateUI();
 
         if(savedInstanceState != null){
             mPersonList = savedInstanceState.getParcelableArrayList("PersonList");
         }
-//        else {
-//            mPersonList.add(new Person("姜人和","12:34:56:78:12:34",0,"422-3"));
-//        }
         new FetchPersonState().execute();
 
 //        vibrator = (Vibrator) mContext.getSystemService(VIBRATOR_SERVICE);
@@ -130,6 +129,7 @@ public class UserListFragment extends Fragment {
     }
 
     public class PersonAdapter extends RecyclerView.Adapter<PersonHolder>{
+        //TODO: 应该使用单例构建一个userlist
         private List<Person> mList;
         public PersonAdapter(List<Person> s){
             mList=s;
