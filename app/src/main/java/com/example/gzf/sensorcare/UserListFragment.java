@@ -29,6 +29,7 @@ import com.alibaba.fastjson.JSON;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
@@ -39,8 +40,13 @@ import static android.content.Context.VIBRATOR_SERVICE;
 
 public class UserListFragment extends Fragment {
     private RecyclerView mRecyclerView;
-    private List<Person> mPersonList = new ArrayList<>();
     private PersonAdapter personAdapter;
+
+    private List<Person> personList = new ArrayList<>();
+    PersonSet personSet;
+
+    // 用于存储需要改变的RecyclerView项的标号
+    private int position;
 
     Context mContext = getContext();
     NotificationManager mNotificationManager;
@@ -61,11 +67,29 @@ public class UserListFragment extends Fragment {
         mRecyclerView = (RecyclerView) v.findViewById(R.id.recycler_view);
         mRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
         mRecyclerView.addItemDecoration(new DividerItemDecoration(getContext(),DividerItemDecoration.VERTICAL));
-        //updateUI();
+        updateUI();
 
-        if(savedInstanceState != null){
-            mPersonList = savedInstanceState.getParcelableArrayList("PersonList");
-        }
+        //调用RecyclerView#addOnItemTouchListener方法能添加一个RecyclerView.OnItemTouchListener对象
+        mRecyclerView.addOnItemTouchListener(new RecyclerViewClickListener(getActivity(),new RecyclerViewClickListener.OnItemClickListener() {
+            @Override
+            public void onItemClick(View view, int position) {
+                String personBle = personList.get(position).getBle();
+                Intent intent = UserActivity.newIntent(getActivity(), personBle);
+                startActivity(intent);
+//                Toast.makeText(getActivity(),"Click "+personList.get(position),Toast.LENGTH_SHORT).show();
+            }
+
+            @Override
+            public void onItemLongClick(View view, int position) {
+                Toast.makeText(getActivity(),"Long Click "+personList.get(position),Toast.LENGTH_SHORT).show();
+            }
+        }));
+
+
+        //TODO:check it if necessary
+//        if(savedInstanceState != null){
+//            personList = savedInstanceState.getParcelableArrayList("PersonList");
+//        }
         new FetchPersonState().execute();
 
 //        vibrator = (Vibrator) mContext.getSystemService(VIBRATOR_SERVICE);
@@ -77,21 +101,28 @@ public class UserListFragment extends Fragment {
     @Override
     public void onResume() {
         super.onResume();
-        personAdapter = new PersonAdapter(mPersonList);
-        setupAdapter();
+        updateUI();
+    }
+
+    private void updateUI(){
+        personSet = PersonSet.get(getActivity());
+        personList = personSet.getPersonList();
+
+        if (personAdapter == null) {
+            personAdapter = new PersonAdapter(personList);
+            mRecyclerView.setAdapter(personAdapter);
+        } else {
+            personAdapter.notifyDataSetChanged();
+        }
     }
 
     @Override
     public void onSaveInstanceState(Bundle outState){
         super.onSaveInstanceState(outState);
-        outState.putParcelableArrayList("PersonList", (ArrayList<Person>)mPersonList);
+        outState.putParcelableArrayList("PersonList", (ArrayList<Person>)personList);
     }
 
-    private void setupAdapter(){
-        mRecyclerView.setAdapter(personAdapter);
-    }
-
-    public class PersonHolder extends RecyclerView.ViewHolder{
+    public class PersonHolder extends RecyclerView.ViewHolder {
         private TextView mNameTextView;
         private TextView mLocationTextView;
         private TextView mStateTextView;
@@ -126,10 +157,17 @@ public class UserListFragment extends Fragment {
                 //vibrator.vibrate(new long[]{100,1000,500,1000,500,2000,500,2000},-1);
             }
         }
+//        @Override
+//        public void onClick(View view) {
+//            Log.i("click",mPerson.getName());
+//            Toast.makeText(getActivity(), mPerson.getName() + " clicked!", Toast.LENGTH_SHORT).show();
+//            position = mRecyclerView.getChildAdapterPosition(view);
+//            Intent intent = UserActivity.newIntent(getActivity(), mPerson.getmId());
+//            startActivity(intent);
+//        }
     }
 
     public class PersonAdapter extends RecyclerView.Adapter<PersonHolder>{
-        //TODO: 应该使用单例构建一个userlist
         private List<Person> mList;
         public PersonAdapter(List<Person> s){
             mList=s;
@@ -145,7 +183,6 @@ public class UserListFragment extends Fragment {
         @Override
         public void onBindViewHolder(PersonHolder holder, int position) {
             Person person=mList.get(position);
-//            Log.i("index",person.toString());
             holder.bind(person);
         }
 
@@ -168,24 +205,22 @@ public class UserListFragment extends Fragment {
             }
         }
 
-
         @Override
         protected void onProgressUpdate(List<Person>... values) {
             super.onProgressUpdate(values);
-//            setupAdapter(mPersonList);
-
-            mRecyclerView.setAdapter(new PersonAdapter(values[0]));
+            personSet.setPersonList(personList);
+            personAdapter.mList=personList;
+            personAdapter.notifyDataSetChanged();
         }
 
         @Override
         protected Void doInBackground(Void... params) {
             while (true){
                 try{
-                    //Log.i("test",fetchData());
                     String json=fetchData();
-                    mPersonList= JSON.parseArray(json,Person.class);
-                    Log.i("test",mPersonList.get(0).toString());
-                    publishProgress(mPersonList);
+                    personList= JSON.parseArray(json,Person.class);
+                    //Log.i("test",personList.get(0).toString());
+                    publishProgress(personList);
                 }
                 catch (Exception e){
                     Log.d("error",e.toString());

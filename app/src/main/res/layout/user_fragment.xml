@@ -1,31 +1,61 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:layout_margin="16dp">
+    android:layout_margin="8dp">
+
     <TextView
+        android:id="@+id/person_name"
         style="?android:listSeparatorTextViewStyle"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="@string/title_label"/>
-    <EditText
-        android:id="@+id/crime_title"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:hint="@string/title_hint"/>
+        android:text="@string/title_name"
+        android:textColor="@color/black"
+        android:textColorLink="@color/colorPrimaryDark"
+        tools:textSize="28sp" />
+
     <TextView
+        android:id="@+id/person_location"
         style="?android:listSeparatorTextViewStyle"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="@string/details_label"/>
-    <Button
-        android:id="@+id/crime_date"
+        android:text="@string/details_room"
+        tools:textSize="18sp"/>
+
+    <TextView
+        android:id="@+id/person_state"
+        style="?android:listSeparatorTextViewStyle"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"/>
+        android:layout_height="wrap_content"
+        android:text="@string/details_state"
+        tools:textSize="18sp" />
+    <TextView
+        style="?android:listSeparatorTextViewStyle"
+        android:id="@+id/person_ble"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/details_ble"
+        tools:textSize="18sp"/>
+
     <CheckBox
-        android:id="@+id/crime_solved"
+        style="?android:listSeparatorTextViewStyle"
+        android:id="@+id/state_watch"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="@string/solved_label"/>
+        android:text="@string/watch_label"
+        android:textColorLink="@color/colorPrimaryDark"
+        android:textStyle="bold"
+        tools:textSize="14sp" />
+
+    <EditText
+        android:id="@+id/text_record"
+        android:layout_width="match_parent"
+        android:layout_height="120dp"
+        android:hint="@string/text_record"
+        android:textColorLink="@color/colorPrimaryDark"
+        tools:textSize="14sp"
+        android:shadowColor="@color/dark_blue"
+        android:background="@null"/>
 </LinearLayout>

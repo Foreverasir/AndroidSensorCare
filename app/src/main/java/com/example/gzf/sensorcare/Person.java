@@ -3,11 +3,11 @@ package com.example.gzf.sensorcare;
 import android.os.Parcel;
 import android.os.Parcelable;
 
-/**
- * Created by yangpc on 2018/3/27.
- */
+import java.util.UUID;
+
 
 public class Person implements Parcelable {
+    private UUID mId;
     private String name;
     private String ble;
     private int state;
@@ -29,53 +29,58 @@ public class Person implements Parcelable {
         this.location = location;
     }
 
-    public Person(){
+    public Person() {
 
     }
 
     protected Person(Parcel in) {
+        mId = UUID.randomUUID();
         name = in.readString();
         ble = in.readString();
         state = in.readInt();
         location = in.readString();
     }
 
-    public Person(String name, String ble, int state, String location){
-        this.name=name;
-        this.ble=ble;
-        this.state=state;
-        this.location=location;
+    public Person(String name, String ble, int state, String location) {
+        mId = UUID.randomUUID();
+        this.name = name;
+        this.ble = ble;
+        this.state = state;
+        this.location = location;
+    }
+
+    public UUID getmId() {
+        return mId;
     }
 
     public String getName() {
-        return String.format("姓名：%s",name);
+        return String.format("姓名：%s", name);
     }
 
     public String getBle() {
-        return ble;
+        return String.format("传感器mac地址：%s", ble);
     }
 
     public String getState() {
-        if(state==0){
+        if (state == 0) {
             return String.format("状态：静止");
-        }else if(state==4){
+        } else if (state == 4) {
             return String.format("状态：传感器断连");
-        }
-        else{
+        } else {
             return String.format("状态：离床");
         }
     }
 
-    public int getRawState(){
+    public int getRawState() {
         return state;
     }
 
     public String getLocation() {
-        return String.format("位置：%s室",location);
+        return String.format("位置：%s室", location);
     }
 
-    public String toString(){
-        return String.format("%s,%s,%d,%s",name,ble,state,location);
+    public String toString() {
+        return String.format("%s,%s,%d,%s", name, ble, state, location);
     }
 
     public static final Creator<Person> CREATOR = new Creator<Person>() {
@@ -91,7 +96,7 @@ public class Person implements Parcelable {
     };
 
     @Override
-    public int describeContents(){
+    public int describeContents() {
         return 0;
     }
 
