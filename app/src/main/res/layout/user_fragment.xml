@@ -4,7 +4,7 @@
     android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:layout_margin="8dp">
+    android:padding="8dp">
 
     <TextView
         android:id="@+id/person_name"
@@ -40,7 +40,6 @@
         tools:textSize="18sp"/>
 
     <CheckBox
-        style="?android:listSeparatorTextViewStyle"
         android:id="@+id/state_watch"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -52,10 +51,12 @@
     <EditText
         android:id="@+id/text_record"
         android:layout_width="match_parent"
-        android:layout_height="120dp"
+        android:layout_height="139dp"
+        android:background="@null"
+        android:gravity="top|start"
         android:hint="@string/text_record"
-        android:textColorLink="@color/colorPrimaryDark"
-        tools:textSize="14sp"
+        android:padding="8dp"
         android:shadowColor="@color/dark_blue"
-        android:background="@null"/>
+        android:textColorLink="@color/colorPrimaryDark"
+        tools:textSize="14sp" />
 </LinearLayout>

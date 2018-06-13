@@ -28,6 +28,8 @@ public class UserFragment extends Fragment {
     private CheckBox mCheckBox;
     private EditText mEditText;
 
+    private PersonSet.UserLocalInfo userLocalInfo;
+
     private static final String ARG_PERSON_BLE = "person_ble";
 
     public static UserFragment newInstance(String ble){
@@ -47,8 +49,9 @@ public class UserFragment extends Fragment {
         }else {
             Log.i("UserFragment:","can not get ble as id!");
         }
-        mPerson =PersonSet.get(getActivity()).getPerson(personBle);
-        //Log.i("person",mPerson.toString());
+        PersonSet ps = PersonSet.get(getActivity());
+        mPerson = ps.getPerson(personBle);
+        userLocalInfo = ps.getUserLocalInfo(mPerson.getBle());
     }
 
     @Nullable
@@ -60,14 +63,18 @@ public class UserFragment extends Fragment {
         mLocationTextView = (TextView)v.findViewById(R.id.person_location);
         mBleTextView = (TextView)v.findViewById(R.id.person_ble);
         mCheckBox = (CheckBox)v.findViewById(R.id.state_watch);
+        mCheckBox.setChecked(userLocalInfo.isWatched);
         mCheckBox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
-                //mPerson.setIfWatch(b);
+                userLocalInfo.setWatched(b);
             }
         });
 
         mEditText = (EditText)v.findViewById(R.id.text_record);
+        if(userLocalInfo.getHelpText()!=null){
+            mEditText.setText(userLocalInfo.getHelpText());
+        }
         mEditText.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
@@ -76,7 +83,7 @@ public class UserFragment extends Fragment {
 
             @Override
             public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-
+                userLocalInfo.setHelpText(charSequence.toString());
             }
 
             @Override
@@ -86,7 +93,6 @@ public class UserFragment extends Fragment {
         });
 
         updateUI();
-
         return v;
     }
 

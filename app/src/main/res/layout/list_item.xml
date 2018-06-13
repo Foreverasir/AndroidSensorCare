@@ -3,6 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="fill_parent"
     android:layout_height="wrap_content"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:background="@drawable/list_selector"
     android:orientation="horizontal"
     android:padding="8dp">
@@ -41,17 +42,17 @@
 
     <TextView
         android:id="@+id/person_location"
-        android:layout_width="fill_parent"
+        android:layout_width="247dp"
         android:layout_height="wrap_content"
         android:layout_below="@id/person_name"
+        android:layout_marginLeft="5dip"
         android:layout_marginTop="5dip"
         android:layout_toRightOf="@+id/thumbnail"
-        android:layout_marginLeft="5dip"
         android:text="Further infomation"
         android:textColor="#040404"
-        android:typeface="sans"
         android:textSize="15dip"
-        android:textStyle="bold"/>
+        android:textStyle="bold"
+        android:typeface="sans" />
 
 
     <TextView
@@ -66,5 +67,14 @@
         android:textSize="15dip"
         android:textColor="#1296db"
         android:textStyle="bold"/>
+
+    <ImageView
+        android:id="@+id/ic_watched"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBottom="@+id/thumbnail"
+        android:layout_alignEnd="@+id/person_state"
+        android:background="@android:color/holo_blue_dark"
+        app:srcCompat="@drawable/ic_watched" />
 
 </RelativeLayout>

@@ -1,9 +1,11 @@
 <resources>
     <string name="app_name">SensorCare</string>
-    <string name="text_record">输入备注</string>
+    <string name="text_record">输入此用户相关备注</string>
     <string name="title_name">姓名</string>
     <string name="details_room">房间号</string>
     <string name="details_state">状态</string>
     <string name="details_ble">绑定设备蓝牙地址</string>
     <string name="watch_label">是否监测</string>
+    <string name="to_first">最前页</string>
+    <string name="to_last">最后页</string>
 </resources>

@@ -57,6 +57,8 @@ public class Person implements Parcelable {
         return String.format("姓名：%s", name);
     }
 
+    public String getRawName(){return name;}
+
     public String getBle() {
         return String.format("传感器mac地址：%s", ble);
     }
