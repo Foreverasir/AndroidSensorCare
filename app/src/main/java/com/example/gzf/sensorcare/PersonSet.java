@@ -1,7 +1,13 @@
 package com.example.gzf.sensorcare;
 
+import android.content.ContentValues;
 import android.content.Context;
+import android.database.sqlite.SQLiteDatabase;
 import android.util.ArrayMap;
+
+import com.example.gzf.sensorcare.database.UserInfoBaseHelper;
+import com.example.gzf.sensorcare.database.UserInfoDbSchema;
+import com.example.gzf.sensorcare.database.UserInfoDbSchema.UserInfoTable;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -9,9 +15,13 @@ import java.util.UUID;
 
 public class PersonSet {
     private static PersonSet sPersonSet;
+    /* 由于实时从服务器获取数据，故不存储于本地*/
     private List<Person> personList;
 
     /* 辅助信息存储在本机，而非从服务器获取 */
+    /* 6.20使用SQLite数据库存储 */
+    private Context mContext;
+    private SQLiteDatabase mDatabase;
     private ArrayMap<String,UserLocalInfo> personInfoList;
 
     public static PersonSet get(Context context) {
@@ -23,7 +33,9 @@ public class PersonSet {
 
     private PersonSet(Context context) {
         personList = new ArrayList<>();
-        personInfoList = new ArrayMap<>();
+
+        mContext = context.getApplicationContext();
+        mDatabase = new UserInfoBaseHelper(mContext).getWritableDatabase();
     }
 
     public List<Person> getPersonList() {
@@ -36,17 +48,27 @@ public class PersonSet {
 
     public void setPersonList(List<Person> list){
         personList = list;
-        if(personInfoList.isEmpty()){
+
+        // 对personList每项，查询数据库，若存在不处理，否则添加。
+        if(personList!=null){
             for(Person p : personList){
-                personInfoList.put(p.getBle(),new UserLocalInfo());
+
             }
-        } else {
-            // TODO:此处应该添加检查是否有item被服务器删除，与服务器同步
-            // for()...
-            for(Person p :personList){
-               if(!personInfoList.containsKey(p.getBle())){
-                   personInfoList.put(p.getBle(),new UserLocalInfo());
-               }
+        }
+
+        if(personList!=null){
+            if(personInfoList.isEmpty()){
+                for(Person p : personList){
+                    personInfoList.put(p.getBle(),new UserLocalInfo());
+                }
+            } else {
+                // TODO:此处应该添加检查是否有item被服务器删除，与服务器同步
+                // for()...
+                for(Person p :personList){
+                    if(!personInfoList.containsKey(p.getBle())){
+                        personInfoList.put(p.getBle(),new UserLocalInfo());
+                    }
+                }
             }
         }
 
@@ -72,39 +94,5 @@ public class PersonSet {
             }
         }
         return null;
-    }
-
-    public class UserLocalInfo{
-        boolean isWatched;
-        boolean existFlag;
-        String helpText;
-
-        UserLocalInfo() {
-            isWatched = false;
-            existFlag = true;
-            helpText = null;
-        }
-
-        public UserLocalInfo(boolean isWatched, boolean existFlag, String helpText) {
-            this.isWatched = isWatched;
-            this.existFlag = existFlag;//是否在界面中显示，此处之后完善
-            this.helpText = helpText;
-        }
-
-        public boolean isWatched() {
-            return isWatched;
-        }
-
-        public void setWatched(boolean watched) {
-            isWatched = watched;
-        }
-
-        public String getHelpText() {
-            return helpText;
-        }
-
-        public void setHelpText(String helpText) {
-            this.helpText = helpText;
-        }
     }
 }
