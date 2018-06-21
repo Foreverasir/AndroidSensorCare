@@ -54,15 +54,5 @@ public class UserLocalInfo {
     public void setHelpText(String helpText) {
         this.helpText = helpText;
     }
-
-    private static ContentValues getContentValues(UserLocalInfo userLocalInfo) {
-        ContentValues values = new ContentValues();
-        values.put(UserInfoDbSchema.UserInfoTable.Cols.BLEID, userLocalInfo.getBleId());
-        values.put(UserInfoDbSchema.UserInfoTable.Cols.ISWATCHED, userLocalInfo.isWatched());
-        values.put(UserInfoDbSchema.UserInfoTable.Cols.EXISTFLAG, userLocalInfo.isExistFlag());
-        values.put(UserInfoDbSchema.UserInfoTable.Cols.HELPTEXT, userLocalInfo.getHelpText());
-
-        return values;
-    }
 }
 

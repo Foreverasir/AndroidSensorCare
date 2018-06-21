@@ -46,7 +46,7 @@ public class UserListFragment extends Fragment {
 
     private List<Person> personList = new ArrayList<>();
     PersonSet personSet;
-    private ArrayMap<String, PersonSet.UserLocalInfo> personInfoList;
+    private ArrayMap<String, UserLocalInfo> personInfoList;
 
     // 用于存储需要改变的RecyclerView项的标号
     private int position;
@@ -87,10 +87,6 @@ public class UserListFragment extends Fragment {
             }
         }));
 
-        // TODO:之后使用SQLite数据库存储
-//        if(savedInstanceState != null){
-//            personList = savedInstanceState.getParcelableArrayList("PersonList");
-//        }
         new FetchPersonState().execute();
 
         vibrator = (Vibrator) getActivity().getSystemService(VIBRATOR_SERVICE);
@@ -108,7 +104,7 @@ public class UserListFragment extends Fragment {
     private void updateUI() {
         personSet = PersonSet.get(getActivity());
         personList = personSet.getPersonList();
-        personInfoList = personSet.getPersonInfoList();
+        personInfoList = personSet.getPersonInfoListFromDataBase();
 
         if (personAdapter == null) {
             personAdapter = new PersonAdapter(personList);

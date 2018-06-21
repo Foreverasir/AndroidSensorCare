@@ -7,7 +7,6 @@ import java.util.UUID;
 
 
 public class Person implements Parcelable {
-    private UUID mId;
     private String name;
     private String ble;
     private int state;
@@ -34,7 +33,6 @@ public class Person implements Parcelable {
     }
 
     protected Person(Parcel in) {
-        mId = UUID.randomUUID();
         name = in.readString();
         ble = in.readString();
         state = in.readInt();
@@ -42,15 +40,10 @@ public class Person implements Parcelable {
     }
 
     public Person(String name, String ble, int state, String location) {
-        mId = UUID.randomUUID();
         this.name = name;
         this.ble = ble;
         this.state = state;
         this.location = location;
-    }
-
-    public UUID getmId() {
-        return mId;
     }
 
     public String getName() {

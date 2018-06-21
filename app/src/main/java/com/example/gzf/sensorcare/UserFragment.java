@@ -17,8 +17,6 @@ import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.TextView;
 
-import java.util.UUID;
-
 public class UserFragment extends Fragment {
     private Person mPerson;
     private TextView mNameTextView;
@@ -28,7 +26,7 @@ public class UserFragment extends Fragment {
     private CheckBox mCheckBox;
     private EditText mEditText;
 
-    private PersonSet.UserLocalInfo userLocalInfo;
+    private UserLocalInfo userLocalInfo;
 
     private static final String ARG_PERSON_BLE = "person_ble";
 
@@ -52,6 +50,13 @@ public class UserFragment extends Fragment {
         PersonSet ps = PersonSet.get(getActivity());
         mPerson = ps.getPerson(personBle);
         userLocalInfo = ps.getUserLocalInfo(mPerson.getBle());
+    }
+
+    @Override
+    public void onPause(){
+        super.onPause();
+        // 更新数据库的当前本地信息
+        PersonSet.get(getActivity()).updateUserInfo(userLocalInfo);
     }
 
     @Nullable
