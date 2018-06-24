@@ -20,6 +20,7 @@ public class UserPagerActivity extends AppCompatActivity {
 
     private ViewPager mViewPager;
     private List<Person> mPersonList;
+    private List<Person> mPersonExistList;
 
     private ImageButton btnToFirst;
     private ImageButton btnToLast;
@@ -52,6 +53,7 @@ public class UserPagerActivity extends AppCompatActivity {
 
         //TODO: 尚未考虑实时更新，目前将此段放入onResume()来使得activity出栈后会执行
         mPersonList = PersonSet.get(this).getPersonList();
+        mPersonExistList = PersonSet.get(this).getExistPersonList();
 
         FragmentManager fragmentManager = getSupportFragmentManager();
         mViewPager.setAdapter(new FragmentStatePagerAdapter(fragmentManager) {

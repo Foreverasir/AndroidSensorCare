@@ -15,4 +15,11 @@
     <string name="make_debug_title">请输入开发者密钥</string>
     <string name="make_debug_ok">确认</string>
     <string name="make_debug_cancel">取消</string>
+    <string name="make_log_title">监测记录</string>
+    <string name="text_help_title">监测记录与备注</string>
+    <string name="add_log_button">添加监测记录</string>
+    <string name="true_positive">系统报警且发生离床行为</string>
+    <string name="true_negative">系统报警但未发生离床行为</string>
+    <string name="false_positive">系统未报警但发生离床行为</string>
+    <string name="tag_disconnect">传感器断连</string>
 </resources>
