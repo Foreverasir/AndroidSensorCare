@@ -38,15 +38,18 @@
         android:layout_height="wrap_content"
         android:text="@string/details_ble"
         tools:textSize="18sp"/>
-
-    <CheckBox
-        android:id="@+id/state_watch"
+    <Switch
+        style="?android:listSeparatorTextViewStyle"
+        android:id="@+id/is_debug"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="@string/watch_label"
-        android:textColorLink="@color/colorPrimaryDark"
-        android:textStyle="bold"
-        tools:textSize="14sp" />
+        android:text="@string/switch_debug" />
+    <Switch
+        style="?android:listSeparatorTextViewStyle"
+        android:id="@+id/is_watch"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/switch_watch" />
 
     <EditText
         android:id="@+id/text_record"
@@ -59,4 +62,11 @@
         android:shadowColor="@color/dark_blue"
         android:textColorLink="@color/colorPrimaryDark"
         tools:textSize="14sp" />
+
+    <Button
+        android:id="@+id/button"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Button" />
+
 </LinearLayout>

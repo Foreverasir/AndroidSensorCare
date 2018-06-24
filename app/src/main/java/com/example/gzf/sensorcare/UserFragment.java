@@ -4,6 +4,7 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.text.format.DateFormat;
@@ -15,6 +16,8 @@ import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.EditText;
+import android.widget.FrameLayout;
+import android.widget.Switch;
 import android.widget.TextView;
 
 public class UserFragment extends Fragment {
@@ -23,12 +26,14 @@ public class UserFragment extends Fragment {
     private TextView mLocationTextView;
     private TextView mStateTextView;
     private TextView mBleTextView;
-    private CheckBox mCheckBox;
     private EditText mEditText;
+    private Switch mSwitchWatch;
+    private Switch mSwitchDebug;
 
     private UserLocalInfo userLocalInfo;
 
     private static final String ARG_PERSON_BLE = "person_ble";
+    private static final String DIALOG_MAKE_DEBUG = "DialogMakeDebug";
 
     public static UserFragment newInstance(String ble){
         Bundle args = new Bundle();
@@ -67,14 +72,28 @@ public class UserFragment extends Fragment {
         mStateTextView = (TextView)v.findViewById(R.id.person_state);
         mLocationTextView = (TextView)v.findViewById(R.id.person_location);
         mBleTextView = (TextView)v.findViewById(R.id.person_ble);
-        mCheckBox = (CheckBox)v.findViewById(R.id.state_watch);
-        mCheckBox.setChecked(userLocalInfo.isWatched);
-        mCheckBox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+
+        mSwitchWatch = (Switch)v.findViewById(R.id.is_watch);
+        mSwitchWatch.setChecked(userLocalInfo.isWatched());
+        mSwitchWatch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
                 userLocalInfo.setWatched(b);
             }
         });
+
+        mSwitchDebug = (Switch)v.findViewById(R.id.is_debug);
+        mSwitchDebug.setChecked(!userLocalInfo.existFlag);
+        mSwitchDebug.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
+                FragmentManager manager = getFragmentManager();
+                MakeDebugFragment diaglog=new MakeDebugFragment();
+                diaglog.show(manager,DIALOG_MAKE_DEBUG);
+                userLocalInfo.setExistFlag(!b);
+            }
+        });
+
 
         mEditText = (EditText)v.findViewById(R.id.text_record);
         if(userLocalInfo.getHelpText()!=null){

@@ -20,6 +20,9 @@ import android.support.v7.widget.RecyclerView;
 import android.util.ArrayMap;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
@@ -41,15 +44,20 @@ import static android.content.Context.NOTIFICATION_SERVICE;
 import static android.content.Context.VIBRATOR_SERVICE;
 
 public class UserListFragment extends Fragment {
+
+    private static final String SAVED_DEBUG_VISIBLE = "seedebug";
+
     private RecyclerView mRecyclerView;
     private PersonAdapter personAdapter;
 
     private List<Person> personList = new ArrayList<>();
+    private List<Person> personExistList = new ArrayList<>();
     PersonSet personSet;
     private ArrayMap<String, UserLocalInfo> personInfoList;
 
-    // 用于存储需要改变的RecyclerView项的标号
-    private int position;
+    // 是否隐藏开发测试用的Tag
+    private boolean seeDebugTagFlag;
+
 
     // 用于通知
     NotificationManager mNotificationManager;
@@ -63,6 +71,14 @@ public class UserListFragment extends Fragment {
     private SoundPool soundPool;
     int hit;
 
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setHasOptionsMenu(true);
+
+        seeDebugTagFlag = false;
+    }
+
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -70,13 +86,23 @@ public class UserListFragment extends Fragment {
         mRecyclerView = (RecyclerView) v.findViewById(R.id.recycler_view);
         mRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
         mRecyclerView.addItemDecoration(new DividerItemDecoration(getContext(), DividerItemDecoration.VERTICAL));
+
+        if (savedInstanceState != null) {
+            seeDebugTagFlag = savedInstanceState.getBoolean(SAVED_DEBUG_VISIBLE);
+        }
+
         updateUI();
 
         //调用RecyclerView#addOnItemTouchListener方法能添加一个RecyclerView.OnItemTouchListener对象
         mRecyclerView.addOnItemTouchListener(new RecyclerViewClickListener(getActivity(), new RecyclerViewClickListener.OnItemClickListener() {
             @Override
             public void onItemClick(View view, int position) {
-                String personBle = personList.get(position).getBle();
+                String personBle;
+                if(seeDebugTagFlag) {
+                    personBle = personList.get(position).getBle();
+                } else {
+                    personBle = personExistList.get(position).getBle();
+                }
                 Intent intent = UserPagerActivity.newIntent(getActivity(), personBle);
                 startActivity(intent);
             }
@@ -92,6 +118,7 @@ public class UserListFragment extends Fragment {
         vibrator = (Vibrator) getActivity().getSystemService(VIBRATOR_SERVICE);
         soundPool = new SoundPool(2, AudioManager.STREAM_MUSIC, 100);
         hit = soundPool.load(getContext(), R.raw.my_alert, 0);
+
         return v;
     }
 
@@ -101,23 +128,56 @@ public class UserListFragment extends Fragment {
         updateUI();
     }
 
-    private void updateUI() {
-        personSet = PersonSet.get(getActivity());
-        personList = personSet.getPersonList();
-        personInfoList = personSet.getPersonInfoListFromDataBase();
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putBoolean(SAVED_DEBUG_VISIBLE, seeDebugTagFlag);
+    }
 
-        if (personAdapter == null) {
-            personAdapter = new PersonAdapter(personList);
-            mRecyclerView.setAdapter(personAdapter);
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        super.onCreateOptionsMenu(menu, inflater);
+        inflater.inflate(R.menu.list_fragment, menu);
+
+        MenuItem item = menu.findItem(R.id.show_debug);
+        if (seeDebugTagFlag) {
+            item.setTitle(R.string.hide_debug);
+            item.setIcon(R.drawable.ic_hide_debug);
         } else {
-            personAdapter.notifyDataSetChanged();
+            item.setTitle(R.string.show_debug);
+            item.setIcon(R.drawable.ic_see_debug);
         }
     }
 
     @Override
-    public void onSaveInstanceState(Bundle outState) {
-        super.onSaveInstanceState(outState);
-        outState.putParcelableArrayList("PersonList", (ArrayList<Person>) personList);
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.show_debug:
+                seeDebugTagFlag = !seeDebugTagFlag;
+                getActivity().invalidateOptionsMenu();
+                updateUI();
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
+    }
+
+    private void updateUI() {
+        personSet = PersonSet.get(getActivity());
+        personList = personSet.getPersonList();
+        personExistList = personSet.getExistPersonList();
+        personInfoList = personSet.getPersonInfoListFromDataBase();
+
+        if (personAdapter == null) {
+            personAdapter = new PersonAdapter(personList);
+            if (!seeDebugTagFlag) {
+                personAdapter.setmList(personExistList);
+                personAdapter.notifyDataSetChanged();
+            }
+            mRecyclerView.setAdapter(personAdapter);
+        } else {
+            personAdapter.notifyDataSetChanged();
+        }
     }
 
     public class PersonHolder extends RecyclerView.ViewHolder {
@@ -135,6 +195,7 @@ public class UserListFragment extends Fragment {
             mStateTextView = (TextView) itemView.findViewById(R.id.person_state);
             mImageView = (ImageView) itemView.findViewById(R.id.list_image);
             mIsWatchedWView = (ImageView) itemView.findViewById(R.id.ic_watched);
+
         }
 
         public void bind(Person person) {
@@ -162,7 +223,6 @@ public class UserListFragment extends Fragment {
             mList = s;
         }
 
-
         @Override
         public PersonHolder onCreateViewHolder(ViewGroup parent, int viewType) {
             LayoutInflater layoutInflater = LayoutInflater.from(getContext());
@@ -178,6 +238,10 @@ public class UserListFragment extends Fragment {
         @Override
         public int getItemCount() {
             return mList.size();
+        }
+
+        public void setmList(List<Person> mList) {
+            this.mList = mList;
         }
     }
 
@@ -198,7 +262,12 @@ public class UserListFragment extends Fragment {
             super.onProgressUpdate(values);
             personSet.setPersonList(personList);
             personInfoList = personSet.getPersonInfoList();
-            personAdapter.mList = personList;
+            personExistList = personSet.getExistPersonList();
+            if (seeDebugTagFlag) {
+                personAdapter.setmList(personList);
+            } else {
+                personAdapter.setmList(personExistList);
+            }
             personAdapter.notifyDataSetChanged();
 
             // 报警方式：音频、震动与通知
@@ -218,8 +287,8 @@ public class UserListFragment extends Fragment {
                         builder = new Notification.Builder(getActivity());
 
                         builder.setContentTitle("SensorCare")
-                                .setContentText("报警："+p.getRawName()+"传感器发生变化"+p.getState())
-                                .setSubText("原"+p.getLocation())
+                                .setContentText("报警：" + p.getRawName() + "传感器发生变化" + p.getState())
+                                .setSubText("原" + p.getLocation())
                                 .setTicker("离床检测系统报警")
                                 //设置状态栏中的小图片，尺寸一般建议在24×24，这个图片同样也是在下拉状态栏中所显示
                                 .setSmallIcon(R.mipmap.ic_launcher)

@@ -2,8 +2,6 @@ package com.example.gzf.sensorcare.database;
 
 import android.database.Cursor;
 import android.database.CursorWrapper;
-
-import com.example.gzf.sensorcare.PersonSet;
 import com.example.gzf.sensorcare.UserLocalInfo;
 import com.example.gzf.sensorcare.database.UserInfoDbSchema.UserInfoTable;
 

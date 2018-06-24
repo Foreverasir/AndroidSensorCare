@@ -42,6 +42,18 @@ public class PersonSet {
         mDatabase = new UserInfoBaseHelper(mContext).getWritableDatabase();
     }
 
+    // 获取非Debug测试用的数目
+    public List<Person> getExistPersonList() {
+        List<Person> result = new ArrayList<>();
+        for (Person p : personList) {
+            if (personInfoList.get(p.getBle()).isExistFlag()) {
+                result.add(p);
+            }
+        }
+        return result;
+    }
+
+
     public List<Person> getPersonList() {
         return personList;
     }

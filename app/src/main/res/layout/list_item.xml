@@ -4,9 +4,10 @@
     android:layout_width="fill_parent"
     android:layout_height="wrap_content"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:background="@drawable/list_selector"
     android:orientation="horizontal"
     android:padding="8dp">
+    <!--android:background="@drawable/list_selector"-->
+
     <!--  ListView最左边的缩略图 -->
     <LinearLayout android:id="@+id/thumbnail"
                   android:layout_width="wrap_content"

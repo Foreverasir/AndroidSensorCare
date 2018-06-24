@@ -8,4 +8,11 @@
     <string name="watch_label">是否监测</string>
     <string name="to_first">最前页</string>
     <string name="to_last">最后页</string>
+    <string name="show_debug">显示调试用户</string>
+    <string name="hide_debug">关闭调试用户</string>
+    <string name="switch_debug">调试模式</string>
+    <string name="switch_watch">监测</string>
+    <string name="make_debug_title">请输入开发者密钥</string>
+    <string name="make_debug_ok">确认</string>
+    <string name="make_debug_cancel">取消</string>
 </resources>
