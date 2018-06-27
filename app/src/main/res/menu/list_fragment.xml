@@ -12,4 +12,9 @@
         android:icon="@drawable/ic_choose_alert"
         android:title="@string/choose_alert"
         app:showAsAction="ifRoom|withText"/>
+    <item
+        android:id="@+id/write_log"
+        android:icon="@drawable/ic_write_log"
+        android:title="@string/write_log"
+        app:showAsAction="ifRoom|withText"/>
 </menu>

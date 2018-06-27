@@ -32,9 +32,12 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.alibaba.fastjson.JSON;
+import com.example.gzf.sensorcare.toolmodels.WriteLog;
 
+import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
 import java.util.UUID;
 
@@ -170,6 +173,21 @@ public class UserListFragment extends Fragment {
                 ChooseAlertFragment dialog = ChooseAlertFragment.newInstance(vibrateFlag,soundFlag);
                 dialog.setTargetFragment(UserListFragment.this,REQUEST_ALERT);
                 dialog.show(manager,DIALOG_CHOOSE_ALERT);
+            case R.id.write_log:
+                WriteLog writeLog = new WriteLog();
+                writeLog.setFileDir("SensorCareLog");
+                String content = "LOG:";
+                for(Person p:personList){
+                    content= String.format("%s\n%s", content, personInfoList.get(p.getBle()).getHelpText());
+                }
+                writeLog.setLog(content);
+                try {
+                    writeLog.writeLogToFile(WriteLog.TXT_TAIL);
+                    Toast.makeText(getActivity(), "实验日志写入文件", Toast.LENGTH_SHORT).show();
+                } catch (IOException e) {
+                    Toast.makeText(getActivity(), "实验日志写入失败，请进入设置开启权限", Toast.LENGTH_SHORT).show();
+                    e.printStackTrace();
+                }
             default:
                 return super.onOptionsItemSelected(item);
         }
