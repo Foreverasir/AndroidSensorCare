@@ -1,29 +1,31 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/list_item_Layout"
     android:layout_width="fill_parent"
     android:layout_height="wrap_content"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:orientation="horizontal"
-    android:padding="8dp">
-    <!--android:background="@drawable/list_selector"-->
+    tools:layout_editor_absoluteY="81dp">
 
     <!--  ListView最左边的缩略图 -->
-    <LinearLayout android:id="@+id/thumbnail"
-                  android:layout_width="wrap_content"
-                  android:layout_height="wrap_content"
-                  android:padding="3dip"
-                  android:layout_alignParentLeft="true"
-                  android:background="@drawable/image_bg"
-                  android:layout_marginRight="5dip">
+    <LinearLayout
+        android:id="@+id/thumbnail"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="8dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
+        android:padding="3dip"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
 
         <ImageView
             android:id="@+id/list_image"
             android:layout_width="50dip"
             android:layout_height="50dip"
-            android:src="@drawable/safety"
             tools:baselineAlignBottom="false" />
-
+        <!--android:src="@drawable/safety"-->
     </LinearLayout>
 
 
@@ -31,51 +33,59 @@
         android:id="@+id/person_name"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignTop="@+id/thumbnail"
-        android:layout_toRightOf="@+id/thumbnail"
+        android:layout_marginBottom="2dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="2dp"
         android:text="Add other infomation"
         android:textColor="#040404"
+        android:textSize="15sp"
+        android:textStyle="bold"
         android:typeface="sans"
-        android:textSize="15dip"
-        android:layout_marginTop="5dip"
-        android:layout_marginLeft="5dip"
-        android:textStyle="bold"/>
+        app:layout_constraintBottom_toTopOf="@+id/person_location"
+        app:layout_constraintStart_toEndOf="@+id/thumbnail"
+        app:layout_constraintTop_toTopOf="@+id/thumbnail" />
 
     <TextView
         android:id="@+id/person_location"
-        android:layout_width="247dp"
+        android:layout_width="255dp"
         android:layout_height="wrap_content"
-        android:layout_below="@id/person_name"
-        android:layout_marginLeft="5dip"
-        android:layout_marginTop="5dip"
-        android:layout_toRightOf="@+id/thumbnail"
+        android:layout_marginBottom="8dp"
+        android:layout_marginStart="8dp"
         android:text="Further infomation"
         android:textColor="#040404"
-        android:textSize="15dip"
+        android:textSize="15sp"
         android:textStyle="bold"
-        android:typeface="sans" />
+        android:typeface="sans"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/thumbnail" />
 
 
     <TextView
         android:id="@+id/person_state"
-        android:layout_width="wrap_content"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_alignParentRight="true"
-        android:layout_alignTop="@id/person_name"
+        android:layout_marginEnd="16dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="2dp"
         android:gravity="right"
         android:text="1:00"
-        android:layout_marginRight="20dip"
-        android:textSize="15dip"
         android:textColor="#1296db"
-        android:textStyle="bold"/>
+        android:textSize="15sp"
+        android:textStyle="bold"
+        app:layout_constraintBottom_toTopOf="@+id/ic_watched"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/person_name"
+        app:layout_constraintTop_toTopOf="@+id/thumbnail" />
 
     <ImageView
         android:id="@+id/ic_watched"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignBottom="@+id/thumbnail"
-        android:layout_alignEnd="@+id/person_state"
+        android:layout_marginBottom="8dp"
+        android:layout_marginEnd="16dp"
         android:background="@android:color/holo_blue_dark"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
         app:srcCompat="@drawable/ic_watched" />
 
-</RelativeLayout>
+</android.support.constraint.ConstraintLayout>

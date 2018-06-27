@@ -1,5 +1,6 @@
 package com.example.gzf.sensorcare;
 
+import android.app.Activity;
 import android.app.Notification;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
@@ -14,6 +15,7 @@ import android.os.Vibrator;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
 import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -44,8 +46,8 @@ import static android.content.Context.NOTIFICATION_SERVICE;
 import static android.content.Context.VIBRATOR_SERVICE;
 
 public class UserListFragment extends Fragment {
-
-    private static final String SAVED_DEBUG_VISIBLE = "seedebug";
+    private static final String DIALOG_CHOOSE_ALERT = "choose_alert";
+    private static final String SAVED_DEBUG_VISIBLE = "see_debug";
 
     private RecyclerView mRecyclerView;
     private PersonAdapter personAdapter;
@@ -70,6 +72,9 @@ public class UserListFragment extends Fragment {
     private Vibrator vibrator;
     private SoundPool soundPool;
     int hit;
+    private boolean vibrateFlag;
+    private boolean soundFlag;
+    private static final int REQUEST_ALERT = 0;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -77,6 +82,9 @@ public class UserListFragment extends Fragment {
         setHasOptionsMenu(true);
 
         seeDebugTagFlag = false;
+        // TODO：下面两个标志考虑加入数据库
+        vibrateFlag = false;
+        soundFlag = false;
     }
 
     @Nullable
@@ -157,8 +165,25 @@ public class UserListFragment extends Fragment {
                 getActivity().invalidateOptionsMenu();
                 updateUI();
                 return true;
+            case R.id.choose_alert:
+                FragmentManager manager = getFragmentManager();
+                ChooseAlertFragment dialog = ChooseAlertFragment.newInstance(vibrateFlag,soundFlag);
+                dialog.setTargetFragment(UserListFragment.this,REQUEST_ALERT);
+                dialog.show(manager,DIALOG_CHOOSE_ALERT);
             default:
                 return super.onOptionsItemSelected(item);
+        }
+    }
+
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if(requestCode==REQUEST_ALERT){
+            if(resultCode == Activity.RESULT_OK){
+                vibrateFlag = (boolean)data.getSerializableExtra(ChooseAlertFragment.EXTRA_VIBRATE);
+                soundFlag = (boolean)data.getSerializableExtra(ChooseAlertFragment.EXTRA_SOUND);
+                updateUI();
+            }
         }
     }
 
@@ -205,8 +230,9 @@ public class UserListFragment extends Fragment {
             mLocationTextView.setText(mPerson.getLocation());
             mIsWatchedWView.setVisibility(personInfoList.get(person.getBle()).isWatched ? View.VISIBLE : View.GONE);
 
+            int id = getResources().getIdentifier("warning.png","drawable",getActivity().getPackageName());
+
             if (mPerson.getRawState() == 0) {
-//                itemView.setBackgroundColor(0xFFFF9900);
                 mImageView.setImageResource(R.drawable.safety);
             } else if (mPerson.getRawState() == 4) {
                 mImageView.setImageResource(R.drawable.warning);
@@ -275,11 +301,13 @@ public class UserListFragment extends Fragment {
                 if (p.getRawState() > 0) {
                     if (personInfoList.get(p.getBle()).isWatched) {
                         /* 音频 */
-                        int i = soundPool.play(hit, 5, 5, 0, 0, (float) 1);
-
+                        if(soundFlag) {
+                            soundPool.play(hit, 5, 5, 0, 0, (float) 1);
+                        }
                         /* 震动 */
-                        vibrator.vibrate(new long[]{100, 1000, 500, 1000, 500, 2000}, -1);
-
+                        if(vibrateFlag) {
+                            vibrator.vibrate(new long[]{100, 1000, 500, 1000, 500, 2000}, -1);
+                        }
                         /* 通知 */
                         mNotificationManager = (NotificationManager) getActivity().getSystemService(NOTIFICATION_SERVICE);
                         // TODO:明确参数含义

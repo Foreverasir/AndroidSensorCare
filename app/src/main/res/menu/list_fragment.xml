@@ -1,9 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:theme="@style/Theme.AppCompat">
     <item
         android:id="@+id/show_debug"
         android:icon="@drawable/ic_see_debug"
         android:title="@string/show_debug"
+        app:showAsAction="ifRoom|withText"/>
+    <item
+        android:id="@+id/choose_alert"
+        android:icon="@drawable/ic_choose_alert"
+        android:title="@string/choose_alert"
         app:showAsAction="ifRoom|withText"/>
 </menu>

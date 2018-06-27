@@ -100,6 +100,7 @@ public class UserFragment extends Fragment {
                 FragmentManager manager = getFragmentManager();
                 MakeDebugFragment dialog = new MakeDebugFragment();
                 dialog.setTargetFragment(UserFragment.this, REQUEST_PASSWORD);
+                dialog.setCancelable(false);
                 dialog.show(manager, DIALOG_MAKE_DEBUG);
             }
         });

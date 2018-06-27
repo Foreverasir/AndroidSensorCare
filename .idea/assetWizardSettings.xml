@@ -23,7 +23,7 @@
                                           <PersistentState>
                                             <option name="values">
                                               <map>
-                                                <entry key="url" value="jar:file:/C:/Software/Android%20Studio/plugins/android/lib/android.jar!/images/material_design_icons/action/ic_visibility_off_black_24dp.xml" />
+                                                <entry key="url" value="jar:file:/C:/Software/Android%20Studio/plugins/android/lib/android.jar!/images/material_design_icons/editor/ic_border_color_black_24dp.xml" />
                                               </map>
                                             </option>
                                           </PersistentState>
@@ -33,7 +33,8 @@
                                   </option>
                                   <option name="values">
                                     <map>
-                                      <entry key="outputName" value="ic_hide_debug" />
+                                      <entry key="imageAsset" value="C:\File\Android\SensorCare\app\src\main\res\drawable-v24\safety.png" />
+                                      <entry key="outputName" value="ic_write_log" />
                                     </map>
                                   </option>
                                 </PersistentState>

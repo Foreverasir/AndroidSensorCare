@@ -5,9 +5,6 @@
     <string name="details_room">房间号</string>
     <string name="details_state">状态</string>
     <string name="details_ble">绑定设备蓝牙地址</string>
-    <string name="watch_label">是否监测</string>
-    <string name="to_first">最前页</string>
-    <string name="to_last">最后页</string>
     <string name="show_debug">显示调试用户</string>
     <string name="hide_debug">关闭调试用户</string>
     <string name="switch_debug">调试模式</string>
@@ -22,4 +19,7 @@
     <string name="true_negative">系统报警但未发生离床行为</string>
     <string name="false_positive">系统未报警但发生离床行为</string>
     <string name="tag_disconnect">传感器断连</string>
+    <string name="choose_alert">选择报警模式</string>
+    <string name="alert_vibrate">手机震动</string>
+    <string name="alert_sound">报警音效</string>
 </resources>
